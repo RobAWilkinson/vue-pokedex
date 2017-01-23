@@ -36,9 +36,37 @@ const store = new Vuex.Store({
         fetching: false,
         pokedex,
       }
+    },
+    fetchPokemonandSelectCurrent(state, { pokemon }) {
+      console.log(JSON.parse(JSON.stringify(pokemon)));
+      state.pokeData = {
+          ...state.pokeData,
+          pokemon: {
+            ...state.pokeData.pokemon,
+          },
+          selectedPokemon: pokemon
+      }
     }
   },
   actions: {
+    fetchDetails({commit, state}, pokemon) {
+      const url = pokemon.pokemon_species.url
+      const number = pokemon.entry_number
+      fetch(url)
+      .then(resp => resp.json())
+      .then(pokemon => {
+        const mutation = {
+          type: 'fetchPokemonandSelectCurrent',
+          pokemon,
+        };
+        return commit(mutation);
+      })
+
+      // fetch(data)
+
+
+
+    },
     getPokemon({commit, state}) {
       commit({type: types.REQUEST_POKEDEX_BEGIN });
       fetch(API_URL + `pokedex/2`)
@@ -56,56 +84,12 @@ const store = new Vuex.Store({
 // actions are passed in by calling store.commit({type: STRING, ...data })
 // this fires the mutation of the same name
 // user store.dispatch for async
-const Counter = {
-  template: `<h1>{{ fetching }}</h1>`,
-  computed: {
-    fetching() {
-      return this.$store.state.pokeData.fetching;
-    }
-  }
-}
-const Pokemon = {
-  props: [ 'pokemon'],
-  template: `
-    <div>
-      {{ pokemon.pokemon_species.name }}
-    </div>
-  `,
-};
-const Pokedex = {
-  components: { Pokemon },
-  template: `
-  <div>
-    <h3>Pokedex</h3>
-      {{ pokedexEntries.length }}
-      <div v-for="pokemon in pokedexEntries" >
-        <pokemon :pokemon="pokemon"></pokemon>
-      </div>
-  </div>
-    `,
-  computed: {
-    pokedexEntries() {
-      console.log('HERE', this.$store.state.pokeData);
-      if(this.$store.state.pokeData.pokedex) {
-        console.log('HERE')
-        return this.$store.state.pokeData.pokedex.pokemon_entries;
-      } else {
-        return []
-      }
-    }
-  }
-};
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   // state
   store,
-  computed: {
-    count() {
-      console.log(this.$store);
-      return this.$store.count;
-    },
-  },
   components: {
     App
   },
@@ -116,12 +100,4 @@ new Vue({
     </div>
   `,
   // actions
-  methods: {
-    increment() {
-      store.commit({ type: 'increment' });
-    },
-    fetchPokemon() {
-      store.dispatch('getPokemon')
-    }
-  },
 });

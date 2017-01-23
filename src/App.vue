@@ -1,23 +1,34 @@
 <template>
   <div id="app">
-    <pokedex></pokedex>
+    <div class="pokedex">
+      <pokedex></pokedex>
+    </div>
+    <div class="selected">
+      <selected v-if="selectedPokemon" :selectedPokemon="selectedPokemon">
+      </selected>
+    </div>
     <button v-on:click="fetchPokemon">Fetch</button>
     {{ fetching }}
-
-  </div>
+ </div>
 </template>
 
 <script>
 import Pokedex from './components/Pokedex'
+import Selected from './components/Selected'
 
 export default {
   name: 'app',
   components: {
     Pokedex,
+    Selected,
   },
   computed: {
     fetching() {
       return this.$store.state.pokeData.fetching;
+    },
+    selectedPokemon() {
+      return this.$store.state.pokeData.selectedPokemon;
+
     }
   },
   
@@ -32,13 +43,20 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+.pokedex {
+  width: 60%;
+  display: inline-block;
+}
+.selected {
+  width: 40%;
+  float: right;
 }
 </style>
