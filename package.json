@@ -10,6 +10,7 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
+    "av-ts": "^0.6.2",
     "babel-core": "^6.22.1",
     "babel-loader": "^6.2.10",
     "babel-plugin-transform-runtime": "^6.22.0",
@@ -17,11 +18,13 @@
     "babel-runtime": "^6.22.0",
     "css-loader": "^0.25.0",
     "style-loader": "^0.13.1",
+    "typescript": "^2.1.5",
     "vue": "^2.1.10",
     "vue-hot-reload-api": "^2.0.8",
     "vue-html-loader": "^1.2.3",
     "vue-loader": "^10.0.2",
     "vue-ts-loader": "0.0.3",
+    "vue-typescript-component": "^0.6.2",
     "vuex": "^2.1.1"
   },
   "devDependencies": {

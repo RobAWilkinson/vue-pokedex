@@ -7,8 +7,8 @@
       <input type="text" v-model="message" />
     </div>
     <transition-group name="list" appear>
-      <pokemon v-for="pokemon in pokedexEntries" :key="pokemon.pokemon_species.name" :pokemon="pokemon"></pokemon>
-    </transition>
+    <pokemon v-for="pokemon in pokedexEntries" :key="pokemon.pokemon_species.name" :pokemon="pokemon"></pokemon>
+    </transition-group>
 </template>
 
 <script>

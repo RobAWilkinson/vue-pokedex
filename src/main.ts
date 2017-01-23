@@ -1,9 +1,12 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import Vue from 'vue';
-import Vuex from 'vuex';
-import createLogger from 'vuex/dist/logger';
-import App from './App';
+declare var require: any
+declare var fetch: any
+
+import Vue = require('vue');
+import Vuex = require('vuex');
+var App = require('./App.vue').default;
+import createLogger = require('vuex/dist/logger');
 
 
 Vue.use(Vuex);
@@ -12,8 +15,8 @@ const types = {
   REQUEST_POKEDEX_BEGIN: 'requestPokedexBegin',
   REQUEST_POKEDEX_SUCCESS: 'requestPokedexSuccess',
 };
-const store = new Vuex.Store({
-  plugins: [createLogger()],
+const store = new (<any>Vuex.Store)({
+  plugins: [(<any>createLogger)()],
   state: {
     count: 0,
     pokeData: {
@@ -26,30 +29,27 @@ const store = new Vuex.Store({
       state.count += 1;
     },
     requestPokedexBegin(state) {
-      state.pokeData = {
-        ...state.pokeData,
+      state.pokeData = (<any>Object).assign({}, state.pokeData, {
         fetching: true,
-      };
+      });
     },
-    requestPokedexSuccess(state, { pokedex }) {
-      state.pokeData = {
-        ...state.pokeData,
+    requestPokedexSuccess(state, data) {
+      state.pokeData = (<any>Object).assign({}, state.pokeData, {
         fetching: false,
-        pokedex,
-      };
+        pokedex: data.pokedex,
+      });
     },
     fetchPokemonandSelectCurrent(state, { pokemon, entry_number }) {
-      const pokemonObj = { ...state.pokeData.pokemon };
+      const pokemonObj = (<any>Object).assign({}, state.pokeData,pokemon);
       pokemonObj[entry_number] = pokemon;
-      state.pokeData = {
-        ...state.pokeData,
+      state.pokeData = (<any>Object).assign({}, state.pokeData, {
         pokemon: pokemonObj,
         selectedPokemon: pokemon,
-      };
+      });
     },
   },
   actions: {
-    fetchDetails({ commit, state }, pokemon) {
+    fetchDetails({ commit, state }, pokemon: any) {
       const url = pokemon.pokemon_species.url;
       const number = pokemon.entry_number;
       if (!state.pokeData.pokemon[number]) {

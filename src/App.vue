@@ -12,36 +12,33 @@
 </template>
 
 <script>
-import Pokedex from './components/Pokedex'
-import Selected from './components/Selected'
+declare var require: any
+var Pokedex = require('./components/Pokedex.vue').default;
+var Selected = require('./components/Selected.vue').default
+import {Vue, Component, Lifecycle} from 'av-ts'
 
-export default {
-  name: 'app',
-  created: function() {
-    this.$store.dispatch('getPokemon')
-  },
+@Component({
   components: {
     Pokedex,
     Selected,
   },
-  computed: {
-    fetching() {
-      return this.$store.state.pokeData.fetching;
-    },
-    selectedPokemon() {
-      return this.$store.state.pokeData.selectedPokemon;
-
-    }
-  },
-  
-  methods: {
-    increment() {
-      this.$store.commit({ type: 'increment' });
-    },
-  },
+  name:'app'
+})
+export default class App extends Vue {
+  @Lifecycle created(): void {
+    this.$store.dispatch('getPokemon')
+  }
+  get fetching(){
+    return this.$store.state.pokeData.fetching;
+  }
+  get selectedPokemon(){
+    return this.$store.state.pokeData.selectedPokemon;
+  }
+  increment() {
+    this.$store.commit({ type: 'increment' });
+  }
 };
 </script>
-
 <style scoped>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
