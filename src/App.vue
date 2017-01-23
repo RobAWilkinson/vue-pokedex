@@ -7,7 +7,6 @@
       <selected v-if="selectedPokemon" :selectedPokemon="selectedPokemon">
       </selected>
     </div>
-    <button v-on:click="fetchPokemon">Fetch</button>
     {{ fetching }}
  </div>
 </template>
@@ -18,6 +17,9 @@ import Selected from './components/Selected'
 
 export default {
   name: 'app',
+  created: function() {
+    this.$store.dispatch('getPokemon')
+  },
   components: {
     Pokedex,
     Selected,
@@ -36,9 +38,6 @@ export default {
     increment() {
       this.$store.commit({ type: 'increment' });
     },
-    fetchPokemon() {
-      this.$store.dispatch('getPokemon')
-    }
   },
 };
 </script>

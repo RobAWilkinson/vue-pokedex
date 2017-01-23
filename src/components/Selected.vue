@@ -1,7 +1,12 @@
 <template>
-    <transition name="fade">
-      <div>
-        {{JSON.parse(JSON.stringify(selectedPokemon))}}
+    <transition appear name="fade">
+      <div class="padded">
+        <h4>
+          {{ selectedPokemon.name }}
+        </h4>
+        <p>
+          {{ selectedPokemon.flavor_text_entries[1].flavor_text }}
+        </p>
       </div>
     </transition>
 </template>
@@ -13,12 +18,19 @@ export default {
 }
 
 </script>
-<style>
-.fade-enter, .fade-leave-active {
-  transition: opacity .5s
+<style scoped>
+.padded {
+  padding: 0 30px;
 }
-.fade-leave, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
-  opacity: 0
+.padded h4 {
+  text-transform: capitalize;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: all 1s;
+}
+.fade-enter, .fade-leave-to /* .list-leave-active for <2.1.8 */ {
+  opacity: 0;
+  transform: translateY(30px);
 }
 
 </style>

@@ -2,12 +2,12 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue';
 import Vuex from 'vuex';
-import createLogger from 'vuex/dist/logger'
-import App from './App.vue'
+import createLogger from 'vuex/dist/logger';
+import App from './App';
 
 
 Vue.use(Vuex);
-const API_URL = 'http://pokeapi.co/api/v2/'
+const API_URL = 'http://pokeapi.co/api/v2/';
 const types = {
   REQUEST_POKEDEX_BEGIN: 'requestPokedexBegin',
   REQUEST_POKEDEX_SUCCESS: 'requestPokedexSuccess',
@@ -17,12 +17,13 @@ const store = new Vuex.Store({
   state: {
     count: 0,
     pokeData: {
+      pokemon: {},
       fetching: false,
-    }
+    },
   },
   mutations: {
     increment(state) {
-      state.count = state.count + 1;
+      state.count += 1;
     },
     requestPokedexBegin(state) {
       state.pokeData = {
@@ -30,53 +31,60 @@ const store = new Vuex.Store({
         fetching: true,
       };
     },
-    requestPokedexSuccess(state, { pokedex}) {
+    requestPokedexSuccess(state, { pokedex }) {
       state.pokeData = {
         ...state.pokeData,
         fetching: false,
         pokedex,
-      }
+      };
     },
-    fetchPokemonandSelectCurrent(state, { pokemon }) {
-      console.log(JSON.parse(JSON.stringify(pokemon)));
+    fetchPokemonandSelectCurrent(state, { pokemon, entry_number }) {
+      const pokemonObj = { ...state.pokeData.pokemon };
+      pokemonObj[entry_number] = pokemon;
       state.pokeData = {
-          ...state.pokeData,
-          pokemon: {
-            ...state.pokeData.pokemon,
-          },
-          selectedPokemon: pokemon
-      }
-    }
+        ...state.pokeData,
+        pokemon: pokemonObj,
+        selectedPokemon: pokemon,
+      };
+    },
   },
   actions: {
-    fetchDetails({commit, state}, pokemon) {
-      const url = pokemon.pokemon_species.url
-      const number = pokemon.entry_number
-      fetch(url)
-      .then(resp => resp.json())
-      .then(pokemon => {
+    fetchDetails({ commit, state }, pokemon) {
+      const url = pokemon.pokemon_species.url;
+      const number = pokemon.entry_number;
+      if (!state.pokeData.pokemon[number]) {
+        fetch(url)
+        .then(resp => resp.json())
+        .then((pokemon) => {
+          const mutation = {
+            type: 'fetchPokemonandSelectCurrent',
+            pokemon,
+            entry_number: number,
+          };
+          return commit(mutation);
+        });
+      } else {
+        pokemon = state.pokeData.pokemon[number];
         const mutation = {
           type: 'fetchPokemonandSelectCurrent',
           pokemon,
+          entry_number: number,
         };
         return commit(mutation);
-      })
+      }
 
       // fetch(data)
-
-
-
     },
-    getPokemon({commit, state}) {
-      commit({type: types.REQUEST_POKEDEX_BEGIN });
-      fetch(API_URL + `pokedex/2`)
+    getPokemon({ commit  }) {
+      commit({ type: types.REQUEST_POKEDEX_BEGIN });
+      fetch(`${API_URL}pokedex/2`)
       .then(resp => resp.json())
-      .then(pokedex => {
-        const mutation = { type: types.REQUEST_POKEDEX_SUCCESS, pokedex }
-        return commit(mutation)
+      .then((pokedex) => {
+        const mutation = { type: types.REQUEST_POKEDEX_SUCCESS, pokedex };
+        return commit(mutation);
       });
-    }
-  }
+    },
+  },
 });
 
 // can also use vuex.mapState here, acts as mapStateToProps in redux
@@ -91,7 +99,7 @@ new Vue({
   // state
   store,
   components: {
-    App
+    App,
   },
   // view
   template: `

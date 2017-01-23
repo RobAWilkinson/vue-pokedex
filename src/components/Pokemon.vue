@@ -1,10 +1,9 @@
 <template>
   <div
-    class="test"
+    class="pokemon"
+    v-on:click="fetchDetails"
   >
-    <div class="name" v-on:click="fetchDetails">
       {{ pokemon.pokemon_species.name }}
-    </div>
   </div>
 </template>
 
@@ -19,8 +18,8 @@ export default {
 }
 </script>
 
-<style>
-.test {
+<style scoped>
+.pokemon {
   /* color: green; */
   border: 3px dashed black;
   /* width: 200px; */
@@ -28,8 +27,12 @@ export default {
   /* text-align: center; */
   padding: 40px;
   border-collapse: collapse;
-}
-.name {
+  transition: all 0.2s;
   text-transform: capitalize;
+}
+.pokemon:hover {
+  background: indianred;
+  cursor: pointer;
+  color: white;
 }
 </style>
